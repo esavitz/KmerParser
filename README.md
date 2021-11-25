@@ -1,7 +1,5 @@
 # K-mer Parser and DNA Sequence Matcher
 
-This program was written for DayZero Diagnostics Software Coding Assessment
-
 ## Table of Contents
 
 1. [System Requirements](#system-requirements)
