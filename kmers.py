@@ -1,7 +1,4 @@
-import difflib
-from os import name
 import sqlite3
-from difflib import SequenceMatcher, Differ
 
 class kmerParser:
     '''
@@ -64,15 +61,16 @@ class kmerParser:
         return data
 
     #toDatabase(kmerDictionary: dictionary): void
-    def toDatabase(self, kmerDictionary):
+    def toDatabase(self, kmerDictionary, output):
         '''
         takes kmer dicitonary data and adds it to a sqlite3 database
         ---
         Parameters:
             kmerDictionary(dictionary): kmer data in the form of a dicitonary, can be aquired with getUniqueKmers method
+            output(filepath): .db to output the data
         '''
         try: #create db and table if it does not exist
-            con = sqlite3.connect('data.db')
+            con = sqlite3.connect(output)
             
             cur = con.cursor()
 
@@ -81,7 +79,7 @@ class kmerParser:
                             count integer
                             )''')
         except sqlite3.OperationalError:
-            print('data.db already exitsts\n')
+            print(output + 'already exitsts\n')
             pass
         for entry in kmerDictionary:
             cur.execute("INSERT INTO kmer VALUES ('{}','{}')".format(entry, kmerDictionary[entry]))
@@ -90,7 +88,7 @@ class kmerParser:
         return
 
 
-#sequence alignment algorithm using dynamic programing 
+#sequence alignment algorithm using dynamic programing NOT USED
 #turns out not to be needed for the match function since all sequences being compared are the same length
 #regardless, it is useful for analyzing other mismatched sequences 
 def seqeuncMatchingCost(a,b,gapCost,matchCost):
@@ -122,6 +120,16 @@ def seqeuncMatchingCost(a,b,gapCost,matchCost):
 
 
 def seqMatchSameLength(s1,s2):
+    '''
+    simple sequence matching algorithm
+    ---
+    Parameters:
+        s1(string): sequence 1
+        s2(string): sequence 2
+    ---
+    Returns:
+        (number): matching cost
+    '''
     misMatchCount = 0
     for i in range(len(s1)):
         if(s1[i] != s2[i]):
@@ -151,11 +159,13 @@ def match(kseq, seq):
     return retSet
 
 def main():
-    print('hello')
+    print('Welcome\n')
+    print('Here is a sample of the match funciton in action: match(\'ACGT\', \'ACACACGT\') outputs:\n')
     print(match('ACGT', 'ACACACGT'))
     parser = kmerParser('SP1.fastq','fastq')
     kmerDict = parser.getUniqueKmers(21)
-    parser.toDatabase(kmerDict)
+    parser.toDatabase(kmerDict, 'data.db')
+    print('\nA data.db file should now show up in this program\'s directory containing all unique 21-mers and their counts as generated from SP1.fastq\n')
 
 if __name__ == "__main__":
     main()
