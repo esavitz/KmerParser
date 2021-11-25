@@ -28,7 +28,7 @@ This program does 2 things primarily:
 
 ## How to Run
 
-To use this program, one can simply run kmers.py to generate the requested data.db and print a sample output to match
+To use this program, download this repo and run kmers.py to generate the requested data.db and print a sample output to match
 
 If one would like to use the functionality of the k-mer parser class, one can construct another parser object with different inputs, and or specify a different length for the get unique k-mers function. Additionally, one can output new data to another database using the toDatabase method.
 
